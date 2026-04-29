@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USCS Protocol — Live Shipment Verification (Project44 Sample)</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 850px; margin: 40px auto; padding: 0 20px; background: #f9fafb; color: #1e293b; }
+        h1 { margin-bottom: 0; } .sub { color: #64748b; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 24px; margin: 24px 0; }
+        .badge { display: inline-block; padding: 6px 16px; border-radius: 6px; font-weight: 600; color: white; background: #f59e0b; } 
+        .approved { background: #10b981; } .rejected { background: #ef4444; } .pending { background: #f59e0b; }
+        .row { display: flex; justify-content: space-between; margin: 12px 0; }
+        .label { color: #64748b; } .value { font-weight: 600; }
+        button { background: #0f172a; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        button:disabled { opacity: 0.6; }
+        small { color: #64748b; margin-top: 8px; display: block; }
+        a { color: #2563eb; }
+    </style>
+</head>
+<body>
+    <h1>USCS Protocol — Live Verification</h1>
+    <p class="sub">Using a <strong>Project44-formatted shipment event</strong>. <br>Click the button to see the signed, machine-readable settlement decision. No UI. No wait. No human.</p>
+    
+    <button id="btn" onclick="fetchResult()">▶ Verify Shipment Now</button>
+    <small>This calls the same live endpoint directly in your browser.</small>
+
+    <div id="result" style="display: none;">
+        <div class="card">
+            <div class="row"><span class="label">Shipment ID</span><span class="value" id="shipmentId">—</span></div>
+            <div class="row"><span class="label">Status</span><span class="value"><span class="badge" id="statusBadge">—</span></span></div>
+            <div class="row"><span class="label">Confidence Score</span><span class="value" id="confidence">—</span>%</div>
+            <div class="row"><span class="label">Financial State</span><span class="value" id="finState">—</span></div>
+            <div class="row"><span class="label">Human-Readable</span><span class="value" id="human">—</span></div>
+            <div class="row"><span class="label">Audit Signature</span><span class="value" style="font-size:12px; word-break:break-all;" id="signature">—</span></div>
+        </div>
+        <small>Raw response also available at: <a href="https://snowy-frost-783uscs-settlement.clearanceinvoice.workers.dev/v1/status/TEST-P44-POSTMAN-002" target="_blank">/v1/status/TEST-P44-POSTMAN-002</a></small>
+    </div>
+
+    <script>
+        async function fetchResult() {
+            const btn = document.getElementById('btn');
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            try {
+                const res = await fetch('https://snowy-frost-783uscs-settlement.clearanceinvoice.workers.dev/v1/status/TEST-P44-POSTMAN-002');
+                const data = await res.json();
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('shipmentId').textContent = data.shipment?.shipment_id || data.event_id;
+                const status = data.normalized_status || data.status;
+                const badge = document.getElementById('statusBadge');
+                badge.textContent = status;
+                badge.className = 'badge ' + (status || '').toLowerCase();
+                document.getElementById('confidence').textContent = (data.confidence_score * 100).toFixed(1);
+                document.getElementById('finState').textContent = data.financial?.state || '—';
+                document.getElementById('human').textContent = data.human_readable || '—';
+                document.getElementById('signature').textContent = data.signature?.substring(0, 32) + '...';
+            } catch(e) {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('human').textContent = 'Could not reach endpoint. Please try again.';
+            }
+            btn.disabled = false;
+            btn.textContent = '▶ Re-run Verification';
+        }
+    </script>
+</body>
+</html>
