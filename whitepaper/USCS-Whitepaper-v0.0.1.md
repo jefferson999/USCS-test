@@ -200,5 +200,3 @@ Continuum Global Protocols
 jefferson.chery@cgprotocols.com
 Live Transparency Log: https://uscs-transparency-log.tiiny.site
 Demo: https://jefferson999.github.io/USCS-test?
-
-Do the same. Make it a pdf format ready.
