@@ -210,6 +210,8 @@ Resources
 - Live Transparency Log:  
   https://uscs-transparency-log.tiiny.site
 
+- Medium Article: [Announcing USCS](https://medium.com/@jeffersonchery1994/announcing-uscs-a-deterministic-verification-layer-for-global-trade-b5a5a0281269)
+  
 - Demo:  
   https://jefferson999.github.io/USCS-test
 
