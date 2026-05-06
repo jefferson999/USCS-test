@@ -215,6 +215,8 @@ Resources
 - Demo:  
   https://jefferson999.github.io/USCS-test
 
+- Press Release: [PRLog](https://www.prlog.org/13143876)
+  
 - Contact:  
   jefferson.chery@cgprotocols.com
 
